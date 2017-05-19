@@ -3,6 +3,10 @@ require 'paper_trail'
 module Globalize
   module Versioning
     module PaperTrail
+      def has_paper_trail(*args)
+        super
+      end
+
       # At present this isn't used but we may use something similar in paper trail
       # shortly, so leaving it around to reference easily.
       #def versioned_columns
@@ -14,10 +18,12 @@ end
 
 ActiveRecord::Base.class_eval do
   class << self
-    def has_paper_trail_with_globalize(*args)
-      has_paper_trail_without_globalize(*args)
-      include Globalize::Versioning::PaperTrail
-    end
-    alias_method_chain :has_paper_trail, :globalize
+    prepend Globalize::Versioning::PaperTrail
+
+    # def has_paper_trail_with_globalize(*args)
+    #   has_paper_trail_without_globalize(*args)
+    #   include Globalize::Versioning::PaperTrail
+    # end
+    # alias_method_chain :has_paper_trail, :globalize
   end
 end
